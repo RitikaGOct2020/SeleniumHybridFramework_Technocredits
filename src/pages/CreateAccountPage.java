@@ -59,7 +59,7 @@ public class CreateAccountPage extends PredefinedActions {
 		if (month!=null) {
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("uniform-months"))).click();
 			s = new Select(driver.findElement(By.id("months")));
-			s.selectByVisibleText(month + " ");
+			s.selectByValue(month);
 		}
 	}
 	private void selectYear(String year) {

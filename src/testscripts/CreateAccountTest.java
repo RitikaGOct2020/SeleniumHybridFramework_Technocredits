@@ -1,11 +1,13 @@
 package testscripts;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import base.PredefinedActions;
 import pages.AuthenticationPage;
@@ -13,6 +15,7 @@ import pages.CreateAccountPage;
 import pages.HomePage;
 import pages.MyProfilePage;
 import pojo.CreateAccountDetailsPojo;
+import util.ExcelOperation;
 
 public class CreateAccountTest {
 	
@@ -27,7 +30,7 @@ public class CreateAccountTest {
 	}
 	
 	@Test
-	public void automationPracticeLogin() {
+	public void createAccountPageTest() {
 		HomePage homePage = new HomePage();
 		
 		System.out.println("STEP: Click on Signin button from homepage");
@@ -73,6 +76,65 @@ public class CreateAccountTest {
 		String actual = myProfilePage.getHeaderText();
 		String expected = "Automation Technocredits";
 		Assert.assertEquals(actual, expected, "Verification of Header text failed");
+	}
+	
+	@Test (dataProvider = "CreateAccountDataProvider")
+	public void createAccountPageDataDrivenTest (String email, String gender, String firstName, String lastName, String password,
+											String day, String month, String year, String company, String address1, String city,
+											String state, String zipcode, String additionalInfo, String homePhone, String mobilePhone, 
+											String aliasAdd) {
+		HomePage homePage = new HomePage();
+		
+		System.out.println("STEP: Click on Signin button from homepage");
+		AuthenticationPage authenticationPage = homePage.clickOnSignIn();
+		
+		System.out.println("STEP: Verify Authentication page header");
+		boolean visibility = authenticationPage.isAuthenticationHeaderVisible();
+		Assert.assertTrue(visibility, "Authentication page header text verification failed");
+		
+		System.out.println("STEP: Enter email address for the create user name");
+		authenticationPage.enterEmailAddress(email);
+		
+		System.out.println("STEP: Navigate to Create Account page");	 
+		CreateAccountPage createAccountPage =  authenticationPage.clickOnCreateAccount();
+		
+		System.out.println("STEP: Verify Create Account Page header");
+		visibility = createAccountPage.verifyCreateAccountPageHeader();
+		Assert.assertTrue(visibility, "Create Account Page Header text verification failed");
+		
+		CreateAccountDetailsPojo createAccountDetailsPojo =  new CreateAccountDetailsPojo();
+		
+		boolean mFlag = gender.equalsIgnoreCase("male") ? true : false;
+		createAccountDetailsPojo.setMale(mFlag);
+		createAccountDetailsPojo.setFirstName(firstName);
+		createAccountDetailsPojo.setLastName(lastName);
+		createAccountDetailsPojo.setPassword(password);
+		createAccountDetailsPojo.setDays(day);
+		createAccountDetailsPojo.setMonth(month);
+		createAccountDetailsPojo.setYear(year);
+		createAccountDetailsPojo.setCompany(company);
+		createAccountDetailsPojo.setAddress1(address1);
+		createAccountDetailsPojo.setCity(city);
+		createAccountDetailsPojo.setState(state);
+		createAccountDetailsPojo.setZipcode(zipcode);
+		createAccountDetailsPojo.setAdditionalInfo(additionalInfo);
+		createAccountDetailsPojo.setHomePhone(homePhone);
+		createAccountDetailsPojo.setMobilePhone(mobilePhone);
+		createAccountDetailsPojo.setAliasAddress(aliasAdd);
+		
+		System.out.println("STEP: Enter all details");
+		createAccountPage.enterCreateAccountDetails(createAccountDetailsPojo);
+		
+		System.out.println("STEP: Click on Register button");
+		/*MyProfilePage myProfilePage = createAccountPage.clickOnRegistration(); 
+		String actual = myProfilePage.getHeaderText();
+		String expected = firstName + " " + lastName;
+		Assert.assertEquals(actual, expected, "Verification of Header text failed");*/
+	}
+	
+	@DataProvider(name="CreateAccountDataProvider")
+	public String[][] getDataForCreateAccountPage() throws IOException{
+		return ExcelOperation.getExcelData("data.xlsx", "CreateAccount");
 	}
 	
 	@Test
