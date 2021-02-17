@@ -14,12 +14,18 @@ public class CreateAccountDetailsPojo {
 	private String city;
 	private String state;
 	private String zipcode;
-	private String country;
 	private String additionalInfo;
 	private String homePhone;
 	private String mobilePhone;
 	private String aliasAddress;
+	private String email;
 	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public boolean isMale() {
 		return isMale;
 	}
@@ -91,12 +97,6 @@ public class CreateAccountDetailsPojo {
 	}
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
-	}
-	public String getCountry() {
-		return country;
-	}
-	public void setCountry(String country) {
-		this.country = country;
 	}
 	public String getAdditionalInfo() {
 		return additionalInfo;

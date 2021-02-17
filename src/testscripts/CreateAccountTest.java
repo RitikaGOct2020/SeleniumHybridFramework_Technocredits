@@ -3,13 +3,9 @@ package testscripts;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import base.PredefinedActions;
 import pages.AuthenticationPage;
 import pages.CreateAccountPage;
 import pages.HomePage;
@@ -17,17 +13,7 @@ import pages.MyProfilePage;
 import pojo.CreateAccountDetailsPojo;
 import util.ExcelOperation;
 
-public class CreateAccountTest {
-	
-	@BeforeMethod
-	public void setUp() {
-		PredefinedActions.start();
-	}
-
-	@AfterMethod
-	public void tearDown() {
-		PredefinedActions.close();
-	}
+public class CreateAccountTest extends TestBase{
 	
 	@Test
 	public void createAccountPageTest() {
@@ -41,7 +27,7 @@ public class CreateAccountTest {
 		Assert.assertTrue(visibility, "Authentication page header text verification failed");
 		
 		System.out.println("STEP: Enter email address for the create user name");
-		authenticationPage.enterEmailAddress("automation07@gmail.com");
+		authenticationPage.enterEmailAddressInCreateAccount("automation07@gmail.com");
 		
 		System.out.println("STEP: Navigate to Create Account page");	 
 		CreateAccountPage createAccountPage =  authenticationPage.clickOnCreateAccount();
@@ -73,7 +59,7 @@ public class CreateAccountTest {
 		
 		System.out.println("STEP: Click on Register button");
 		MyProfilePage myProfilePage = createAccountPage.clickOnRegistration(); 
-		String actual = myProfilePage.getHeaderText();
+		String actual = myProfilePage.getUserFullName();
 		String expected = "Automation Technocredits";
 		Assert.assertEquals(actual, expected, "Verification of Header text failed");
 	}
@@ -93,7 +79,7 @@ public class CreateAccountTest {
 		Assert.assertTrue(visibility, "Authentication page header text verification failed");
 		
 		System.out.println("STEP: Enter email address for the create user name");
-		authenticationPage.enterEmailAddress(email);
+		authenticationPage.enterEmailAddressInCreateAccount(email);
 		
 		System.out.println("STEP: Navigate to Create Account page");	 
 		CreateAccountPage createAccountPage =  authenticationPage.clickOnCreateAccount();
@@ -126,15 +112,75 @@ public class CreateAccountTest {
 		createAccountPage.enterCreateAccountDetails(createAccountDetailsPojo);
 		
 		System.out.println("STEP: Click on Register button");
-		/*MyProfilePage myProfilePage = createAccountPage.clickOnRegistration(); 
-		String actual = myProfilePage.getHeaderText();
+		MyProfilePage myProfilePage = createAccountPage.clickOnRegistration(); 
+		String actual = myProfilePage.getUserFullName();
 		String expected = firstName + " " + lastName;
-		Assert.assertEquals(actual, expected, "Verification of Header text failed");*/
+		Assert.assertEquals(actual, expected, "Verification of Header text failed");
+	}
+	
+	@Test (dataProvider = "CreateAccountDataProviderPojo")
+	public void createAccountPageDataDrivenTestPojo (CreateAccountDetailsPojo createAccountDetailsPojo) {
+		HomePage homePage = new HomePage();
+		
+		System.out.println("STEP: Click on Signin button from homepage");
+		AuthenticationPage authenticationPage = homePage.clickOnSignIn();
+		
+		System.out.println("STEP: Verify Authentication page header");
+		boolean visibility = authenticationPage.isAuthenticationHeaderVisible();
+		Assert.assertTrue(visibility, "Authentication page header text verification failed");
+		
+		System.out.println("STEP: Enter email address for the create user name");
+		authenticationPage.enterEmailAddressInCreateAccount(createAccountDetailsPojo.getEmail());
+		
+		System.out.println("STEP: Navigate to Create Account page");	 
+		CreateAccountPage createAccountPage =  authenticationPage.clickOnCreateAccount();
+		
+		System.out.println("STEP: Verify Create Account Page header");
+		visibility = createAccountPage.verifyCreateAccountPageHeader();
+		Assert.assertTrue(visibility, "Create Account Page Header text verification failed");
+		
+		System.out.println("STEP: Enter all details");
+		createAccountPage.enterCreateAccountDetails(createAccountDetailsPojo);
+		
+		System.out.println("STEP: Click on Register button");
+		MyProfilePage myProfilePage = createAccountPage.clickOnRegistration(); 
+		String actual = myProfilePage.getUserFullName();
+		String expected = createAccountDetailsPojo.getFirstName() + " " + createAccountDetailsPojo.getLastName();
+		Assert.assertEquals(actual, expected, "Verification of Header text failed");
 	}
 	
 	@DataProvider(name="CreateAccountDataProvider")
 	public String[][] getDataForCreateAccountPage() throws IOException{
 		return ExcelOperation.getExcelData("data.xlsx", "CreateAccount");
+	}
+	
+	@DataProvider(name="CreateAccountDataProviderPojo")
+	public Object [][] getDataForCreateAccountPagePojo() throws IOException{
+		String[][] data =  ExcelOperation.getExcelData("data.xlsx", "CreateAccount");
+		Object[][] output = new Object[data.length][1];
+		
+		CreateAccountDetailsPojo createAccountDetailsPojo =  new CreateAccountDetailsPojo();
+		createAccountDetailsPojo.setEmail(data[0][0]);
+		boolean mFlag = data[0][1].equalsIgnoreCase("male") ? true : false;
+		createAccountDetailsPojo.setMale(mFlag);
+		createAccountDetailsPojo.setFirstName(data[0][2]);
+		createAccountDetailsPojo.setLastName(data[0][3]);
+		createAccountDetailsPojo.setPassword(data[0][4]);
+		createAccountDetailsPojo.setDays(data[0][5]);
+		createAccountDetailsPojo.setMonth(data[0][6]);
+		createAccountDetailsPojo.setYear(data[0][7]);
+		createAccountDetailsPojo.setCompany(data[0][8]);
+		createAccountDetailsPojo.setAddress1(data[0][9]);
+		createAccountDetailsPojo.setCity(data[0][10]);
+		createAccountDetailsPojo.setState(data[0][11]);
+		createAccountDetailsPojo.setZipcode(data[0][12]);
+		createAccountDetailsPojo.setAdditionalInfo(data[0][13]);
+		createAccountDetailsPojo.setHomePhone(data[0][14]);
+		createAccountDetailsPojo.setMobilePhone(data[0][15]);
+		createAccountDetailsPojo.setAliasAddress(data[0][16]);
+		
+		output[0][0] = createAccountDetailsPojo;
+		return output;	
 	}
 	
 	@Test
@@ -149,7 +195,7 @@ public class CreateAccountTest {
 		Assert.assertTrue(visibility, "Authentication page header text verification failed");
 		
 		System.out.println("STEP: Enter email address for the create user name");
-		authenticationPage.enterEmailAddress("automation08@gmail.com");
+		authenticationPage.enterEmailAddressInCreateAccount("automation08@gmail.com");
 		
 		System.out.println("STEP: Navigate to Create Account page");	 
 		CreateAccountPage createAccountPage =  authenticationPage.clickOnCreateAccount();

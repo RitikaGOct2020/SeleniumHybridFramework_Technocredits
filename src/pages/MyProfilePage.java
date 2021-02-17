@@ -7,12 +7,13 @@ import base.PredefinedActions;
 
 public class MyProfilePage extends PredefinedActions{
 	
-	public String getHeaderText() {
+	public String getUserFullName() {
 		
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 		String headerText = wait
-				.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".header_user_info span")))
+				.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".header_user_info>a>span")))
 				.getText();
+		System.out.println(headerText);
 		return headerText;
 	}
 }
