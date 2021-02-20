@@ -9,8 +9,8 @@ public class ProductDetailsPojo {
 	private String size;
 	private String color;
 	private String totalPrice;
-	private String totalShipping;
-	private String totalPriceWithShipping;
+	private String shippingPrice;
+	private String finalPrice;
 	
 	public String getProductName() {
 		return productName;
@@ -54,16 +54,16 @@ public class ProductDetailsPojo {
 	public void setTotalPrice(String totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	public String getTotalShipping() {
-		return totalShipping;
+	public String getShippingPrice() {
+		return shippingPrice;
 	}
-	public void setTotalShipping(String totalShipping) {
-		this.totalShipping = totalShipping;
+	public void setShippingPrice(String totalShipping) {
+		this.shippingPrice = totalShipping;
 	}
-	public String getTotalPriceWithShipping() {
-		return totalPriceWithShipping;
+	public String getFinalPrice() {
+		return finalPrice;
 	}
-	public void setTotalPriceWithShipping(String totalPriceWithShipping) {
-		this.totalPriceWithShipping = totalPriceWithShipping;
+	public void setFinalPrice(String totalPriceWithShipping) {
+		this.finalPrice = totalPriceWithShipping;
 	}	
 }

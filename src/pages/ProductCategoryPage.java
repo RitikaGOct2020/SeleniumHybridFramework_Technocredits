@@ -11,7 +11,14 @@ import exceptions.ProductNotAvailableException;
 public class ProductCategoryPage extends PredefinedActions{
 
 	WebDriverWait wait = new WebDriverWait(driver, 30);
+	private static ProductCategoryPage productCategoryPage;
 	
+	public static ProductCategoryPage getInstance() {
+		if(productCategoryPage == null)
+			productCategoryPage = new ProductCategoryPage();
+		
+		return productCategoryPage;
+	}
 	public List<WebElement> getProductList() {
 		List<WebElement> listOfProducts = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//div[@class='right-block']/h5/a")));
 		return listOfProducts;
@@ -26,6 +33,6 @@ public class ProductCategoryPage extends PredefinedActions{
 		} catch (ProductNotAvailableException e) {
 			e.getMessage();
 		}
-		return new ProductDetailsPage();
+		return ProductDetailsPage.getInstance();
 	}
 }

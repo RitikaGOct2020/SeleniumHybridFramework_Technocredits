@@ -13,6 +13,14 @@ import pojo.ProductDetailsPojo;
 public class ProductDetailsPage extends PredefinedActions {
 
 	WebDriverWait wait = new WebDriverWait(driver, 30);
+	
+	private static ProductDetailsPage productDetailsPage;
+	public static ProductDetailsPage getInstance() {
+		if(productDetailsPage == null)
+			productDetailsPage = new ProductDetailsPage();
+		
+		return productDetailsPage;
+	}
 
 	public ProductDetailsPojo captureProductDetails(ProductDetailsPojo productDetailsPojo) {
 		String productName = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//h1"))).getText();
@@ -92,18 +100,18 @@ public class ProductDetailsPage extends PredefinedActions {
 				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class='ajax_cart_shipping_cost']")))
 				.getText().substring(1);
 		String totalPriceWithShipping = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class='ajax_block_cart_total']"))).getText().substring(1);
-		productDetailsPojo.setTotalShipping(totalShipping);
-		productDetailsPojo.setTotalPriceWithShipping(totalPriceWithShipping);
+		productDetailsPojo.setShippingPrice(totalShipping);
+		productDetailsPojo.setFinalPrice(totalPriceWithShipping);
 		Assert.assertEquals(productName, productDetailsPojo.getProductName(), "Product Name is not matching");
 		Assert.assertEquals(colorAndSize, productDetailsPojo.getColor()+", "+productDetailsPojo.getSize(), "Product color and size is not matching");
 		Assert.assertEquals(quantity, productDetailsPojo.getQuantity(), "Product quantity is not matching");
 		Assert.assertEquals(totalPrice, productDetailsPojo.getTotalPrice(), "Total products price is not matching");
-		double d = Double.parseDouble(productDetailsPojo.getTotalPrice()) + Double.parseDouble(productDetailsPojo.getTotalShipping());		
+		double d = Double.parseDouble(productDetailsPojo.getTotalPrice()) + Double.parseDouble(productDetailsPojo.getShippingPrice());		
 		Assert.assertEquals(totalPriceWithShipping, String.format("%.2f", d), "Total price including shipping is not matching");
 	}
 
 	public CheckoutSummaryPage clickOnProceedToCheckout() {
 		driver.findElement(By.xpath("//span[contains(text(), 'Proceed to checkout')]")).click();
-		return new CheckoutSummaryPage();
+		return CheckoutSummaryPage.getInstance();
 	}
 }

@@ -11,6 +11,14 @@ import base.PredefinedActions;
 public class MyProfilePage extends PredefinedActions{
 	
 	WebDriverWait wait = new WebDriverWait(driver, 30);
+	private static MyProfilePage myProfilePage;
+	
+	public static MyProfilePage getInstance() {
+		if(myProfilePage == null) {
+			myProfilePage = new MyProfilePage();
+		}
+		return myProfilePage;
+	}
 	
 	public String getUserFullName() {
 		String userFullName = wait
@@ -29,6 +37,6 @@ public class MyProfilePage extends PredefinedActions{
 				break;
 			}
 		}	
-		return new ProductCategoryPage();
+		return ProductCategoryPage.getInstance();
 	}
 }
