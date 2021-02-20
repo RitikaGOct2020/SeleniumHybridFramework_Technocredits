@@ -15,6 +15,14 @@ public class CreateAccountPage extends PredefinedActions {
 
 	WebDriverWait wait = new WebDriverWait(driver, 30);
 	Select s ;
+	private static CreateAccountPage createAccountPage;
+	
+	public static CreateAccountPage getInstance() {
+		if(createAccountPage == null) {
+			createAccountPage = new CreateAccountPage();
+		}
+		return createAccountPage;
+	}
 
 	public boolean verifyCreateAccountPageHeader() {
 		return wait.until(ExpectedConditions.textToBe(By.cssSelector("h1.page-heading"), "CREATE AN ACCOUNT"));

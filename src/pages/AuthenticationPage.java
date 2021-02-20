@@ -9,6 +9,14 @@ import base.PredefinedActions;
 public class AuthenticationPage extends PredefinedActions{
 	
 	WebDriverWait wait = new WebDriverWait(driver, 30);
+	private static AuthenticationPage authenticationPage;
+	
+	public static AuthenticationPage getInstance() {
+		if(authenticationPage == null)
+			authenticationPage=new AuthenticationPage();
+		
+		return authenticationPage;
+	}
 	
 	public void enterEmailAddressInCreateAccount(String emailId) {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email_create")))
@@ -17,7 +25,7 @@ public class AuthenticationPage extends PredefinedActions{
 
 	public CreateAccountPage clickOnCreateAccount() {
 		wait.until(ExpectedConditions.elementToBeClickable(By.id("SubmitCreate"))).click();
-		return new CreateAccountPage();
+		return CreateAccountPage.getInstance();
 	}
 	
 	public boolean isAuthenticationHeaderVisible() {
@@ -29,7 +37,7 @@ public class AuthenticationPage extends PredefinedActions{
 		enterEmailIdInLogin(emailID);
 		enterPasswordInLogin(password);
 		clickOnSignInButton();
-		return new MyProfilePage();
+		return MyProfilePage.getInstance();
 	}
 
 	private void enterEmailIdInLogin(String emailID) {
